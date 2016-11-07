@@ -1,3 +1,5 @@
+import {combineReducers} from 'redux';
+
 const row = (state, action) => {
   switch (action.type) {
     case 'ADD_ROW':
@@ -55,49 +57,31 @@ const mainInterest = (state = 1, action) => {
   }
 }
 
-export default (state = {}, action) => {
-  return {
-    rows: rows(
-      state.rows,
-      action
-    ),
-    mainValue: mainValue(
-      state.mainValue,
-      action
-    ),
-    mainInterest: mainInterest(
-      state.mainInterest,
-      action
-    ),
-    mainCurrencyCode: mainCurrencyCode(
-      state. mainCurrencyCode,
-      action
-    )
-  }
-}
-// export default (state = {}, action) => {
-//   switch (action.type) {
-//     case 'CHANGE_MAIN_CURRENCY':
-//       return Object.assign({}, state, {
-//         currencyCode: action.currencyCode
-//         });
-//     case 'CHANGE_MAIN_VALUE':
-//       return Object.assign({}, state, {
-//         value: action.value
-//       });
-//     case 'CHANGE_MAIN_INTEREST':
-//       return Object.assign({}, state, {
-//         interest: action.interest
-//       });
-//     case 'ADD_ROW':
-//       return [
-//         ...state,
-//         addRow(undefined, action)
-//       ];
-//     case 'REMOVE_ROW':
-//       return 
+export default combineReducers({
+  rows,
+  mainValue,
+  mainInterest,
+  mainCurrencyCode
+});
 
-//     default:
-//       return state;
+// export default (state = {}, action) => {
+//   return {
+//     rows: rows(
+//       state.rows,
+//       action
+//     ),
+//     mainValue: mainValue(
+//       state.mainValue,
+//       action
+//     ),
+//     mainInterest: mainInterest(
+//       state.mainInterest,
+//       action
+//     ),
+//     mainCurrencyCode: mainCurrencyCode(
+//       state.mainCurrencyCode,
+//       action
+//     )
 //   }
 // }
+

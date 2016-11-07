@@ -5,10 +5,15 @@ const row = (state, action) => {
         id: action.id,
         currencyCode: 'USD'
       }
-    case 'REMOVE_ROW':
-      return {
-
+    case 'CHANGE_ROW_CURRENCY':
+      if (state.id !== action.id) {
+        return state;
       }
+
+      return {
+        ...state,
+        currencyCode: action.currencyCode 
+      };
     default:
       return state;
   }
@@ -21,8 +26,8 @@ const rows = (state = [], action) => {
         ...state,
         row(undefined, action)
       ];
-    case 'REMOVE_ROW':
-
+    case 'CHANGE_ROW_CURRENCY':
+      return state.map(r => row(r, action));
     default:
       return state;
   }

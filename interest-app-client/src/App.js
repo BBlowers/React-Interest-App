@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 
 let idCounter = 0;
-let exchangeCounter = 0;
 
 class CurrencySelector extends Component {
   render() {
@@ -15,7 +14,7 @@ class CurrencySelector extends Component {
         });
       }} value={this.props.row.currency.code}>
         { this.props.rates.map(rate =>
-            <option value={ rate.currencyCode } key={rate.currencyCode}>{ rate.currencyCode }</option>
+            <option value={ rate.currencyCode } key={ rate.currencyCode }>{ rate.currencyCode }</option>
         )}
       </select>
     )
@@ -34,7 +33,7 @@ class MainCurrencySelector extends Component {
           });
         }} value={this.props.mainCurrency.code}>
           { this.props.rates.map(rate =>
-              <option value={ rate.currencyCode } key={rate.currencyCode}>{ rate.currencyCode }</option>
+              <option value={ rate.currencyCode } key={ rate.currencyCode }>{ rate.currencyCode }</option>
           )}
         </select>
       </div>
@@ -52,7 +51,7 @@ class MainValueInput extends Component {
             type: 'CHANGE_MAIN_VALUE',
             mainValue: event.target.value
           });
-        }} value={this.props.mainValue} />
+        }} value={ this.props.mainValue } />
       </div>
     )
   }
@@ -62,14 +61,14 @@ class MainInterestSlider extends Component {
   render() {
     return (
       <div>
-        <h1>User slide to select interest rate</h1>
-        <input id="test" type="range" min="0" max="100" onChange={(event) => {
+        <h1>Use slide to select interest rate</h1>
+        <input type="range" min="0" max="100" onChange={(event) => {
           this.props.store.dispatch({
             type: 'CHANGE_MAIN_INTEREST',
             mainInterest: event.target.value
           })
-        }} value={this.props.mainInterest}/>
-        <h2>{this.props.mainInterest}%</h2>
+        }} value={ this.props.mainInterest }/>
+        <h2>{ this.props.mainInterest }%</h2>
       </div>
     )
   }
@@ -80,7 +79,7 @@ class MainValueWithInterest extends Component {
     const { 
       mainValue,
       mainInterest
-    } = this.props; //Plan to change this...
+    } = this.props;
 
     return (
       <div>
@@ -110,33 +109,62 @@ class AddRowButton extends Component {
 
 class AdditionalRows extends Component {
   render() {
+    const { 
+      store,
+      mainValue,
+      mainInterest,
+      mainCurrency,
+      exchangeRates,
+      rows
+    } = this.props;
     return (
-      <ul>
-        { this.props.rows.map(row => 
-          <li key={row.id}>
-            <CurrencySelector store={this.props.store} row={row} rates={this.props.exchangeRates}/>
-            <p>{row.currency.name}</p>
-            <p>Exchanged value {(row.currency.unitsPerUSD/this.props.mainCurrency.unitsPerUSD)*this.props.mainValue}</p>
-            <p>Interest per month {(row.currency.unitsPerUSD/this.props.mainCurrency.unitsPerUSD)*this.props.mainValue*this.props.mainInterest/1200}</p>
-            <p>Interest per year {(row.currency.unitsPerUSD/this.props.mainCurrency.unitsPerUSD)*this.props.mainValue*this.props.mainInterest/100}</p>
-          </li>
+      <table>
+        <tr>
+          <th>Currency code</th>
+          <th>Currency name</th> 
+          <th>Exchanged value</th>
+          <th>Interest per month</th>
+          <th>Interest per year</th>
+        </tr>
+        <tbody>
+        { rows.map(row => 
+          <tr key={row.id}>
+            <td><CurrencySelector store={store} row={row} rates={exchangeRates}/>
+            </td>
+            <td>{row.currency.name}
+            </td>
+            <td>{(row.currency.unitsPerUSD/mainCurrency.unitsPerUSD)*mainValue}
+            </td>
+            <td>{(row.currency.unitsPerUSD/mainCurrency.unitsPerUSD)*mainValue*mainInterest/1200}
+            </td>
+            <td>{(row.currency.unitsPerUSD/mainCurrency.unitsPerUSD)*mainValue*mainInterest/100}
+            </td>
+          </tr>
         )}
-      </ul>
+        </tbody>
+      </table>
     )
   }
 }
 
 export default class App extends Component {
   render() {
-    const { store } = this.props; //Plan to change this...
+    const { 
+      store,
+      mainValue,
+      mainInterest,
+      mainCurrency,
+      exchangeRates,
+      rows
+    } = this.props;
     return (
-      <div>
-        <MainValueInput store={store} mainValue={this.props.mainValue}/>
-        <MainInterestSlider store={store} mainInterest={this.props.mainInterest}/>          
-        <MainCurrencySelector mainCurrency={this.props.mainCurrency} store={store} rates={this.props.exchangeRates}/>
-        <MainValueWithInterest mainValue={this.props.mainValue} mainInterest={this.props.mainInterest}/>
-        <AddRowButton store={store}/>
-        <AdditionalRows store={store} rows={this.props.rows} exchangeRates={this.props.exchangeRates} mainValue={this.props.mainValue} mainCurrency={this.props.mainCurrency}mainInterest={this.props.mainInterest}/>
+      <div className="container">
+        <MainValueInput store={ store } mainValue={ mainValue }/>
+        <MainInterestSlider store={ store } mainInterest={ mainInterest }/>          
+        <MainCurrencySelector mainCurrency={ mainCurrency } store={ store } rates={ exchangeRates }/>
+        <MainValueWithInterest mainValue={ mainValue } mainInterest={ mainInterest }/>
+        <AdditionalRows store={ store } rows={ rows } exchangeRates={ exchangeRates } mainValue={ mainValue } mainCurrency={ mainCurrency }mainInterest={ mainInterest }/>
+        <AddRowButton store={ store }/>
       </div>  
     );
   }

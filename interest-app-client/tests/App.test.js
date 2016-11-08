@@ -160,3 +160,5 @@ it('handles CHANGE_ROW_CURRENCY', () => {
     reducer(stateBefore, action)
   ).toEqual(stateAfter);
 })
+
+

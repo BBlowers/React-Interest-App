@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 
 const row = (state, action) => {
   switch (action.type) {
@@ -35,25 +35,34 @@ const rows = (state = [], action) => {
   }
 }
 
-const mainValue = (state = 1, action) => {
+const mainValue = (state = 500, action) => {
   if (action.type === 'CHANGE_MAIN_VALUE') {
     return action.mainValue
-  } else {
-    return state;
   }
+  return state;
 }
-const mainCurrencyCode = (state = 1, action) => {
+const mainCurrencyCode = (state = 'USD', action) => {
   if (action.type === 'CHANGE_MAIN_CURRENCY') {
     return action.mainCurrencyCode
-  } else {
-    return state;
   }
+  return state;
 }
 const mainInterest = (state = 1, action) => {
   if (action.type === 'CHANGE_MAIN_INTEREST') {
     return action.mainInterest
-  } else {
-    return state;
+  }
+  return state;
+}
+
+const exchangeRates = (state = [], action) => {
+  switch (action.type) {
+    case 'SET_EXCHANGE_RATES':
+      if(action.fetchedExchangeRates) {
+        return action.fetchedExchangeRates;
+      }
+      return state;
+    default:
+      return state;
   }
 }
 
@@ -61,27 +70,6 @@ export default combineReducers({
   rows,
   mainValue,
   mainInterest,
-  mainCurrencyCode
+  mainCurrencyCode,
+  exchangeRates
 });
-
-// export default (state = {}, action) => {
-//   return {
-//     rows: rows(
-//       state.rows,
-//       action
-//     ),
-//     mainValue: mainValue(
-//       state.mainValue,
-//       action
-//     ),
-//     mainInterest: mainInterest(
-//       state.mainInterest,
-//       action
-//     ),
-//     mainCurrencyCode: mainCurrencyCode(
-//       state.mainCurrencyCode,
-//       action
-//     )
-//   }
-// }
-

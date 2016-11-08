@@ -50,7 +50,12 @@ const mainValue = (state = 500, action) => {
   }
   return state;
 }
-const mainCurrency = (state = {}, action) => {
+const mainCurrency = (state = {
+        currencyCode: "USD",
+        name: "US Dollar",
+        unitsPerUSD: 1.0000000000,
+        USDPerUnit: 1.0000000000
+      }, action) => {
   const isRate = (rate) => {
     return rate.currencyCode === action.mainCurrencyCode;
   }

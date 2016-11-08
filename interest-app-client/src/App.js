@@ -84,8 +84,8 @@ class MainValueWithInterest extends Component {
 
     return (
       <div>
-        <h2>{ mainValue * (mainInterest/100) }/year</h2>
-        <h2>{ mainValue * (mainInterest/100)/12 }/month</h2>
+        <h2>Interest per year { mainValue * (mainInterest/100) }</h2>
+        <h2>Interest per month { mainValue * (mainInterest/100)/12 }</h2>
       </div>
     )
   }
@@ -116,7 +116,9 @@ class AdditionalRows extends Component {
           <li key={row.id}>
             <CurrencySelector store={this.props.store} row={row} rates={this.props.exchangeRates}/>
             <p>{row.currency.name}</p>
-            <p></p>
+            <p>Exchanged value {(row.currency.unitsPerUSD/this.props.mainCurrency.unitsPerUSD)*this.props.mainValue}</p>
+            <p>Interest per month {(row.currency.unitsPerUSD/this.props.mainCurrency.unitsPerUSD)*this.props.mainValue*this.props.mainInterest/1200}</p>
+            <p>Interest per year {(row.currency.unitsPerUSD/this.props.mainCurrency.unitsPerUSD)*this.props.mainValue*this.props.mainInterest/100}</p>
           </li>
         )}
       </ul>
@@ -134,7 +136,7 @@ export default class App extends Component {
         <MainCurrencySelector mainCurrency={this.props.mainCurrency} store={store} rates={this.props.exchangeRates}/>
         <MainValueWithInterest mainValue={this.props.mainValue} mainInterest={this.props.mainInterest}/>
         <AddRowButton store={store}/>
-        <AdditionalRows store={store} rows={this.props.rows} exchangeRates={this.props.exchangeRates} mainValue={this.props.mainValue} mainCurrency={this.props.mainCurrency}/>
+        <AdditionalRows store={store} rows={this.props.rows} exchangeRates={this.props.exchangeRates} mainValue={this.props.mainValue} mainCurrency={this.props.mainCurrency}mainInterest={this.props.mainInterest}/>
       </div>  
     );
   }

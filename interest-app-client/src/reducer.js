@@ -1,11 +1,20 @@
 import { combineReducers } from 'redux';
+const fetchedExchangeRates = require('../../exchangeRates');
 
 const row = (state, action) => {
+  const isRate = (rate) => {
+    return rate.currencyCode === action.currencyCode;
+  }
   switch (action.type) {
     case 'ADD_ROW':
       return {
         id: action.id,
-        currencyCode: 'USD'
+        currency: {
+          currencyCode: "USD",
+          name: "US Dollar",
+          unitsPerUSD: 1.0000000000,
+          USDPerUnit: 1.0000000000
+        }
       }
     case 'CHANGE_ROW_CURRENCY':
       if (state.id !== action.id) {
@@ -14,7 +23,7 @@ const row = (state, action) => {
 
       return {
         ...state,
-        currencyCode: action.currencyCode 
+        currency: fetchedExchangeRates.find(isRate)
       };
     default:
       return state;
@@ -29,7 +38,6 @@ const rows = (state = [], action) => {
         row(undefined, action)
       ];
     case 'CHANGE_ROW_CURRENCY':
-      console.log(action);
       return state.map(r => row(r, action));
     default:
       return state;
@@ -42,9 +50,12 @@ const mainValue = (state = 500, action) => {
   }
   return state;
 }
-const mainCurrencyCode = (state = 'USD', action) => {
+const mainCurrency = (state = {}, action) => {
+  const isRate = (rate) => {
+    return rate.currencyCode === action.mainCurrencyCode;
+  }
   if (action.type === 'CHANGE_MAIN_CURRENCY') {
-    return action.mainCurrencyCode
+    return fetchedExchangeRates.find(isRate)
   }
   return state;
 }
@@ -71,6 +82,6 @@ export default combineReducers({
   rows,
   mainValue,
   mainInterest,
-  mainCurrencyCode,
+  mainCurrency,
   exchangeRates
 });

@@ -16,7 +16,7 @@ store.dispatch({
 
 const render = () => {
   ReactDOM.render(
-    <App rows={store.getState().rows} exchangeRates={store.getState().exchangeRates} mainCurrencyCode={store.getState().mainCurrencyCode} mainInterest={store.getState().mainInterest} mainValue={store.getState().mainValue} store={store}/>, //Plan to change this
+    <App rows={store.getState().rows} exchangeRates={store.getState().exchangeRates} mainCurrency={store.getState().mainCurrency} mainInterest={store.getState().mainInterest} mainValue={store.getState().mainValue} store={store}/>, //Plan to change this
     document.getElementById('root')
   )
 };

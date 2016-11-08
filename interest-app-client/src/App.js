@@ -13,9 +13,9 @@ class CurrencySelector extends Component {
           id: this.props.row.id,
           currencyCode: event.target.value
         });
-      }} value={this.props.row.currencyCode}>
+      }} value={this.props.row.currency.code}>
         { this.props.rates.map(rate =>
-            <option value={ rate.currencyCode } key={exchangeCounter++}>{ rate.currencyCode }</option>
+            <option value={ rate.currencyCode } key={rate.currencyCode}>{ rate.currencyCode }</option>
         )}
       </select>
     )
@@ -32,7 +32,7 @@ class MainCurrencySelector extends Component {
             type: 'CHANGE_MAIN_CURRENCY',
             mainCurrencyCode: event.target.value
           });
-        }} value={this.props.mainCurrencyCode}>
+        }} value={this.props.mainCurrency.code}>
           { this.props.rates.map(rate =>
               <option value={ rate.currencyCode } key={rate.currencyCode}>{ rate.currencyCode }</option>
           )}
@@ -84,8 +84,8 @@ class MainValueWithInterest extends Component {
 
     return (
       <div>
-        <h2>{ mainValue * (1 + mainInterest/100) }/year</h2>
-        <h2>{ mainValue * (1 + mainInterest/100)/12 }/month</h2>
+        <h2>{ mainValue * (mainInterest/100) }/year</h2>
+        <h2>{ mainValue * (mainInterest/100)/12 }/month</h2>
       </div>
     )
   }
@@ -115,7 +115,8 @@ class AdditionalRows extends Component {
         { this.props.rows.map(row => 
           <li key={row.id}>
             <CurrencySelector store={this.props.store} row={row} rates={this.props.exchangeRates}/>
-            <p>{row.currencyCode}</p>
+            <p>{row.currency.name}</p>
+            <p></p>
           </li>
         )}
       </ul>
@@ -130,10 +131,10 @@ export default class App extends Component {
       <div>
         <MainValueInput store={store} mainValue={this.props.mainValue}/>
         <MainInterestSlider store={store} mainInterest={this.props.mainInterest}/>          
-        <MainCurrencySelector mainCurrencyCode={this.props.mainCurrencyCode} store={store} rates={this.props.exchangeRates}/>
+        <MainCurrencySelector mainCurrency={this.props.mainCurrency} store={store} rates={this.props.exchangeRates}/>
         <MainValueWithInterest mainValue={this.props.mainValue} mainInterest={this.props.mainInterest}/>
         <AddRowButton store={store}/>
-        <AdditionalRows store={store} rows={this.props.rows} exchangeRates={this.props.exchangeRates}/>
+        <AdditionalRows store={store} rows={this.props.rows} exchangeRates={this.props.exchangeRates} mainValue={this.props.mainValue} mainCurrency={this.props.mainCurrency}/>
       </div>  
     );
   }

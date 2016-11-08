@@ -4,12 +4,20 @@ import './App.css';
 let idCounter = 0;
 let exchangeCounter = 0;
 
+// { rate.currencyCode === this.props.row ? (selected)}
+
 class ExchangeSelector extends Component {
   render() {
     return (
-      <select>
-        { this.props.rates.map(rate => 
-          <option value={ rate.currencyCode } key={exchangeCounter++}>{ rate.currencyCode }</option>
+      <select onChange={(event) => {
+        this.props.store.dispatch({
+          type: 'CHANGE_ROW_CURRENCY',
+          id: this.props.row.id,
+          currencyCode: event.target.value
+        });
+      }} value={this.props.row.currencyCode}>
+        { this.props.rates.map(rate =>
+            <option value={ rate.currencyCode } key={exchangeCounter++}>{ rate.currencyCode }</option>
         )}
       </select>
     )
@@ -41,22 +49,12 @@ export default class App extends Component {
         </button>
         <ul>
           { this.props.rows.map(row => 
-            <li key={row.id} onClick={() => {
-              store.dispatch({
-                type: 'CHANGE_ROW_CURRENCY',
-                id: row.id,
-                currencyCode: 'GBP'
-              });
-              }}
-              style={{ textDecoration: row.currencyCode === 'GBP' ?
-                'line-through' :
-                'none'
-              }}>
-              {row.currencyCode}
+            <li key={row.id}>
+              <ExchangeSelector store={store} row={row} rates={this.props.exchangeRates}/>
+              <p>{row.currencyCode}</p>
             </li>
           )}
         </ul>
-          <ExchangeSelector rates={this.props.exchangeRates}/>
       </div>  
     );
   }

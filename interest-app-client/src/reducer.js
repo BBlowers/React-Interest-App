@@ -29,6 +29,7 @@ const rows = (state = [], action) => {
         row(undefined, action)
       ];
     case 'CHANGE_ROW_CURRENCY':
+      console.log(action);
       return state.map(r => row(r, action));
     default:
       return state;

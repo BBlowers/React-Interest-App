@@ -25,16 +25,19 @@ class CurrencySelector extends Component {
 class MainCurrencySelector extends Component {
   render() {
     return (
-      <select onChange={(event) => {
-        this.props.store.dispatch({
-          type: 'CHANGE_MAIN_CURRENCY',
-          mainCurrencyCode: event.target.value
-        });
-      }} value={this.props.mainCurrencyCode}>
-        { this.props.rates.map(rate =>
-            <option value={ rate.currencyCode } key={rate.currencyCode}>{ rate.currencyCode }</option>
-        )}
-      </select>
+      <div>
+        <h1>Select main currency</h1>
+        <select onChange={(event) => {
+          this.props.store.dispatch({
+            type: 'CHANGE_MAIN_CURRENCY',
+            mainCurrencyCode: event.target.value
+          });
+        }} value={this.props.mainCurrencyCode}>
+          { this.props.rates.map(rate =>
+              <option value={ rate.currencyCode } key={rate.currencyCode}>{ rate.currencyCode }</option>
+          )}
+        </select>
+      </div>
     )
   }
 }
@@ -66,8 +69,56 @@ class MainInterestSlider extends Component {
             mainInterest: event.target.value
           })
         }} value={this.props.mainInterest}/>
-        <h2>{this.props.mainInterest}</h2>
+        <h2>{this.props.mainInterest}%</h2>
       </div>
+    )
+  }
+}
+
+class MainValueWithInterest extends Component {
+  render() {
+    const { 
+      mainValue,
+      mainInterest
+    } = this.props; //Plan to change this...
+
+    return (
+      <div>
+        <h2>{ mainValue * (1 + mainInterest/100) }/year</h2>
+        <h2>{ mainValue * (1 + mainInterest/100)/12 }/month</h2>
+      </div>
+    )
+  }
+}
+
+class AddRowButton extends Component {
+  render() {
+    return (
+      <div>
+        <button onClick={() => {
+          this.props.store.dispatch({
+            type: 'ADD_ROW',
+            id: idCounter++
+          });
+        }}>
+        Add Row
+        </button>
+      </div>
+    )
+  }
+}
+
+class AdditionalRows extends Component {
+  render() {
+    return (
+      <ul>
+        { this.props.rows.map(row => 
+          <li key={row.id}>
+            <CurrencySelector store={this.props.store} row={row} rates={this.props.exchangeRates}/>
+            <p>{row.currencyCode}</p>
+          </li>
+        )}
+      </ul>
     )
   }
 }
@@ -78,27 +129,11 @@ export default class App extends Component {
     return (
       <div>
         <MainValueInput store={store} mainValue={this.props.mainValue}/>
-        <MainInterestSlider store={store} mainInterest={this.props.mainInterest}/>
-        <div>
-          <h1>Select main currency</h1>
-          <MainCurrencySelector mainCurrencyCode={this.props.mainCurrencyCode} store={store} rates={this.props.exchangeRates}/>
-        </div>
-        <button onClick={() => {
-          store.dispatch({
-            type: 'ADD_ROW',
-            id: idCounter++
-          });
-        }}>
-        Add Row
-        </button>
-        <ul>
-          { this.props.rows.map(row => 
-            <li key={row.id}>
-              <CurrencySelector store={store} row={row} rates={this.props.exchangeRates}/>
-              <p>{row.currencyCode}</p>
-            </li>
-          )}
-        </ul>
+        <MainInterestSlider store={store} mainInterest={this.props.mainInterest}/>          
+        <MainCurrencySelector mainCurrencyCode={this.props.mainCurrencyCode} store={store} rates={this.props.exchangeRates}/>
+        <MainValueWithInterest mainValue={this.props.mainValue} mainInterest={this.props.mainInterest}/>
+        <AddRowButton store={store}/>
+        <AdditionalRows store={store} rows={this.props.rows} exchangeRates={this.props.exchangeRates}/>
       </div>  
     );
   }

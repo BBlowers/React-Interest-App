@@ -1,4 +1,4 @@
-export const exchangeRates = [{
+const fetchedExchangeRates = [{
   currencyCode: "USD",
   name: "US Dollar",
   unitsPerUSD: 1.0000000000,
@@ -829,3 +829,5 @@ export const exchangeRates = [{
   unitsPerUSD: 9.8599999024,
   USDPerUnit: 0.1014198793
 }]
+
+module.exports = fetchedExchangeRates;
